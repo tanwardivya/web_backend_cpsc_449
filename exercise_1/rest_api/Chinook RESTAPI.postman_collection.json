@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "95a7c39f-e785-4909-b270-a57e346c1fcc",
+		"name": "Chinook RESTAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29827648"
+	},
+	"item": [
+		{
+			"name": "Albums",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction\":[\r\n        {\r\n            \"query\": \"SELECT al.title FROM albums al where al.artistid = (SELECT artistid FROM artists where name ='Red Hot Chili Peppers')\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/transaction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Genres",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction\":[\r\n        {\r\n            \"query\": \"SELECT ge.name FROM genres ge where ge.genreid in ( SELECT te.genreid FROM tracks te where albumid in (SELECT al.albumid FROM albums al where al.artistid = (SELECT at.artistid FROM artists at  where at.name = 'U2')))\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/transaction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tracks",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"transaction\":[\r\n        {\r\n            \"query\": \"SELECT s2.name as track_name , s2.title as album_title, ar.name as artist_name FROM artists ar,(SELECT s1.name, al.title, al.artistid FROM albums al,(SELECT tr.name, tr.albumid FROM tracks tr where tr.trackid in (SELECT pt.trackid FROM playlist_track pt where pt.playlistid = (SELECT pl.playlistid FROM playlists pl where name ='Grunge'))) as s1 where al.albumid in (s1.albumid)) as s2 where ar.artistid in (s2.artistid)\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8000/api/transaction",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"transaction"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
